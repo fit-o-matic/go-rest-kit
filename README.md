@@ -19,7 +19,7 @@ All public functions are documented with Go doc comments. You can view detailed 
 ## Installation
 
 ```sh
-go get github.com/fit-o-matic/go-rest-utils
+go get github.com/fit-o-matic/go-rest-utils@0.2.0
 ```
 
 ## Usage
@@ -75,6 +75,13 @@ func main() {
 
 - `ToHttpRequest() http.Request`
 - `String() string`
+
+### How to release a new version
+
+1. Update the version number `README.md`.
+2. Commit the changes with a message like `Bump version to vX.Y.Z`.
+3. Create a new Git tag: `git tag vX.Y.Z`.
+4. Push the tag to the repository: `git push origin vX.Y.Z`.
 
 ## License
 
