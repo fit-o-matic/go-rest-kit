@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 
-	"github.com/fit-o-matic/go-rest-utils/restutil"
+	"github.com/fit-o-matic/go-rest-utils/httpx/request"
 )
 
 type Person struct {
@@ -11,23 +12,35 @@ type Person struct {
 	Age  int    `json:"age"`
 }
 
+func (p *Person) GetContentType() string {
+	return "application/json"
+}
+
+func (p *Person) GetData() []byte {
+	return []byte(fmt.Sprintf(`{"name": "%s", "age": %d}`, p.Name, p.Age))
+}
+
 func main() {
-	req, err := restutil.NewRequest().
-		WithMethod("POST").
-		WithBaseURL("https://api.example.com").
-		WithPath("/v1/resource").
-		WithHeader(map[string]string{
-			"Content-Type":  "should be overridden by body",
-			"Authorization": "Bearer token",
-		}).
-		WithQueryParam(map[string]string{
-			"param1": "value1",
-			"param2": "",
-		}).
-		WithBody(Person{Name: "John", Age: 30}).
+	resquest := request.Builder().
+		WithMethod("GET").
+		WithBaseURL("https://emojihub.yurace.pro/api").
+		WithPath("/groups").
 		Build()
+
+	response, err := resquest.Do(&http.Client{})
 	if err != nil {
-		panic(err)
+		fmt.Println("Error:", err)
+		return
 	}
-	fmt.Println(req)
+
+	var groups []string
+	if err := response.UnmarshalJSONBody(&groups); err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	fmt.Println(response.Request.URL)
+	fmt.Println(response.Header)
+
+	fmt.Println("Available Groups:", groups)
 }
