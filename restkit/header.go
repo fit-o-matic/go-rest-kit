@@ -1,19 +1,15 @@
-package header
+package restkit
 
 import "net/http"
 
 type Header map[string]string
 
-const (
-	ContentType = "Content-Type"
-)
-
 func (h Header) SetContentType(contentType string) {
-	h[ContentType] = contentType
+	h[ContentTypeKey] = contentType
 }
 
 func (h Header) GetContentType() string {
-	if v, ok := h[ContentType]; ok {
+	if v, ok := h[ContentTypeKey]; ok {
 		return v
 	}
 	return ""
@@ -28,7 +24,7 @@ func (h Header) CopyToHttpHeader(header http.Header) http.Header {
 	return header
 }
 
-func FromHttpHeader(h http.Header) Header {
+func NewHeaderFromHttpHeader(h http.Header) Header {
 	result := make(Header)
 	for k, v := range h {
 		if len(v) > 0 {

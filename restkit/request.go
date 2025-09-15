@@ -1,19 +1,16 @@
-package request
+package restkit
 
 import (
 	"bytes"
 	"io"
 	"net/http"
-
-	"github.com/fit-o-matic/go-rest-utils/httpx/body"
-	"github.com/fit-o-matic/go-rest-utils/httpx/header"
 )
 
 type Request struct {
 	method string
-	Header header.Header
+	Header Header
 	URL    string
-	body   []byte
+	body   *Body
 }
 
 func (r *Request) ToHttpRequest() (*http.Request, error) {
@@ -24,7 +21,7 @@ func (r *Request) ToHttpRequest() (*http.Request, error) {
 	r.Header.CopyToHttpHeader(httpReq.Header)
 
 	if r.body != nil {
-		httpReq.Body = io.NopCloser(bytes.NewReader(r.body))
+		httpReq.Body = io.NopCloser(bytes.NewReader(r.body.Data))
 	}
 	return httpReq, nil
 }
@@ -43,10 +40,17 @@ func (r *Request) Do(client *http.Client) (*Response, error) {
 
 	defer resp.Body.Close()
 
+	var body *Body
+
+	body, err = NewBodyFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
 	return &Response{
 		Request:    r,
 		StatusCode: resp.StatusCode,
-		Header:     header.FromHttpHeader(resp.Header),
-		Body:       body.FromHttpResponse(resp),
+		Header:     NewHeaderFromHttpHeader(resp.Header),
+		Body:       body,
 	}, nil
 }

@@ -1,17 +1,12 @@
-package request
-
-import (
-	"github.com/fit-o-matic/go-rest-utils/httpx/body"
-	"github.com/fit-o-matic/go-rest-utils/httpx/header"
-)
+package restkit
 
 type RequestBuilder struct {
 	method      string
-	header      header.Header
+	header      Header
 	baseURL     string
 	path        string
-	queryParams map[string]string
-	body        body.Body
+	queryParams Query
+	body        Body
 }
 
 // Request implements RequestBuilder
@@ -21,11 +16,11 @@ func (r *RequestBuilder) WithMethod(method string) *RequestBuilder {
 }
 
 // WithHeader adds or overrides headers for the request. Accepts a map of header key-value pairs.
-func (r *RequestBuilder) WithHeader(values map[string]string) *RequestBuilder {
+func (r *RequestBuilder) WithHeader(header Header) *RequestBuilder {
 	if r.header == nil {
 		r.header = make(map[string]string)
 	}
-	for k, v := range values {
+	for k, v := range header {
 		r.header[k] = v
 	}
 	return r
@@ -43,7 +38,7 @@ func (r *RequestBuilder) WithQueryParam(values map[string]string) *RequestBuilde
 }
 
 // WithBody sets the body of the request.
-func (r *RequestBuilder) WithBody(body body.Body) *RequestBuilder {
+func (r *RequestBuilder) WithBody(body Body) *RequestBuilder {
 	r.body = body
 	return r
 }
@@ -93,24 +88,18 @@ func (r *RequestBuilder) Build() *Request {
 		}
 	}
 
-	var body []byte = nil
-	if r.body != nil {
-		headers["Content-Type"] = r.body.GetContentType()
-		body = r.body.GetData()
-	}
-
 	res = &Request{
 		method: r.method,
 		Header: headers,
 		URL:    url,
-		body:   body,
+		body:   &r.body,
 	}
 
 	return res
 }
 
-// Builder initializes a new RequestBuilder.
-func Builder() *RequestBuilder {
+// NewRequestBuilder initializes a new RequestBuilder.
+func NewRequestBuilder() *RequestBuilder {
 	r := &RequestBuilder{}
 	return r
 }

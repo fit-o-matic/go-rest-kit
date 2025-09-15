@@ -1,8 +1,8 @@
-package httpx
+package restkit
 
-type QueryParams map[string]string
+type Query map[string]string
 
-func (qp QueryParams) String() string {
+func (qp Query) String() string {
 	if len(qp) == 0 {
 		return ""
 	}

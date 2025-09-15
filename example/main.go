@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/fit-o-matic/go-rest-utils/httpx/request"
+	"github.com/fit-o-matic/go-rest-utils/restkit"
 )
 
 type Person struct {
@@ -21,26 +21,11 @@ func (p *Person) GetData() []byte {
 }
 
 func main() {
-	resquest := request.Builder().
+	resquest := restkit.NewRequestBuilder().
 		WithMethod("GET").
 		WithBaseURL("https://emojihub.yurace.pro/api").
 		WithPath("/groups").
 		Build()
 
-	response, err := resquest.Do(&http.Client{})
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-
-	var groups []string
-	if err := response.UnmarshalJSONBody(&groups); err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-
-	fmt.Println(response.Request.URL)
-	fmt.Println(response.Header)
-
-	fmt.Println("Available Groups:", groups)
+	restkit.ExecuteRequestAndPrintResponse(http.DefaultClient, resquest)
 }
