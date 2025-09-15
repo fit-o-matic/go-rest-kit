@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/fit-o-matic/go-rest-utils/restkit"
+	"github.com/fit-o-matic/go-rest-kit/restkit"
 )
 
 type Person struct {
