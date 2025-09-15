@@ -29,7 +29,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/fit-o-matic/go-rest-utils/restutil"
+	"github.com/fit-o-matic/go-rest-kit/restkit"
 )
 
 type Person struct {
