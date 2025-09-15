@@ -1,7 +1,7 @@
 
 
 
-# go-rest-utils
+# go-rest-kit
 
 A lightweight, chainable HTTP request builder for Go.
 
@@ -19,7 +19,7 @@ All public functions are documented with Go doc comments. You can view detailed 
 ## Installation
 
 ```sh
-go get github.com/fit-o-matic/go-rest-utils@0.2.0
+go get github.com/fit-o-matic/go-rest-kit@0.2.0
 ```
 
 ## Usage

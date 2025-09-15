@@ -18,7 +18,7 @@ func (r *RequestBuilder) WithMethod(method string) *RequestBuilder {
 // WithHeader adds or overrides headers for the request. Accepts a map of header key-value pairs.
 func (r *RequestBuilder) WithHeader(header Header) *RequestBuilder {
 	if r.header == nil {
-		r.header = make(map[string]string)
+		r.header = make(Header)
 	}
 	for k, v := range header {
 		r.header[k] = v
@@ -81,9 +81,9 @@ func (r *RequestBuilder) Build() *Request {
 		}
 	}
 
-	headers := make(map[string]string)
+	headers := make(Header)
 	for k, v := range r.header {
-		if v != "" {
+		if len(v) > 0 {
 			headers[k] = v
 		}
 	}
